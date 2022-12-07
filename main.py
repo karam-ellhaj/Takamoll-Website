@@ -11,9 +11,9 @@ db = SQLAlchemy(app)
 
 #DONE : registring new users 
 #DONE : LOGIN 
+#DONE : MESSAGES(you click on the user and see the messages that he sent, the user clicks the contact us button and sees all the messages he sent or recieved)
 
 
-#TODO : MESSAGES(you click on the user and see the messages that he sent, the user clicks the contact us button and sees all the messages he sent or recieved)
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------
 #TODO : adding, deleting and editing products
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -98,7 +98,22 @@ def test():
     return "safe"
 
 
+@app.route("/contact-us")
+def contact():
+    if "id" in session:
+        id = session["id"]
+        if request.method == "POST":
+            message = request.form["message"]
+            sender = id
+            reciever = "admin"
+            db.session.add(Messages(message=message, reciever=reciever, sender=sender))
+            db.session.commit()
 
+            return redirect("/contact-us")
+
+        messages = Messages.query.filter_by(sender=id).all()
+        return render_template("contact.html",messages=messages)
+        
 
 if __name__=="__main__":
     app.run(debug=True)
