@@ -49,7 +49,6 @@ def ismail(email):
     except:
         return False
     
-
 def required(func):
     def nested():
         if 'id' in session:
@@ -72,13 +71,21 @@ def register():
     if request.method == "POST":
         email = request.form["email"]
         password = request.form["password"]
+        cpass = request.form["cpass"]
         user = Users.query.filter_by(email=email).first()
-        if not user and  ismail(email) and len(password)>7:
+
+        if not user and  ismail(email) and cpass == password and  len(password)>7:
             user = Users(email=email,password=password)
             db.session.add(user)
             db.session.commit()
+            return redirect("/login")
         else:
-            return ""
+            if user:
+                return "المستخدم موجود بالفعل"
+            elif cpass != password :
+                return "كلمتا المرور ليستا متشبهتين"
+            else:
+                return ""
     return render_template('register.html')
 
 @app.route("/login",methods=["POST","GET"])
@@ -97,22 +104,26 @@ def login():
 def test():
     return "safe"
 
-
-@app.route("/contact-us")
+@app.route("/about")
+def about():
+    return render_template("about.html")
+@app.route("/contact")
 def contact():
-    if "id" in session:
-        id = session["id"]
-        if request.method == "POST":
-            message = request.form["message"]
-            sender = id
-            reciever = "admin"
-            db.session.add(Messages(message=message, reciever=reciever, sender=sender))
-            db.session.commit()
+    
+    return render_template("contact.html",isloged_in=False)
 
-            return redirect("/contact-us")
+    # if "id" in session:
+    #     id = session["id"]
+    #     if request.method == "POST":
+    #         message = request.form["message"]
+    #         sender = id
+    #         reciever = "admin"
+    #         db.session.add(Messages(message=message, reciever=reciever, sender=sender))
+    #         db.session.commit()
 
-        messages = Messages.query.filter_by(sender=id).all()
-        return render_template("contact.html",messages=messages)
+    #         return redirect("/contact-us")
+
+    #     messages = Messages.query.filter_by(sender=id).all()
         
 
 if __name__=="__main__":
