@@ -269,7 +269,8 @@ button {
 
 .banner_taital {
     width: 100%;
-    float: left;
+    float: right;
+    margin-left: -10px;
     font-size: 66px;
     color: #fffcf4;
     font-weight: 600;
@@ -278,14 +279,14 @@ button {
 
 .btn_main {
     width: 100%;
-    float: left;
+    float: right;
     margin-top: 100px;
     margin-bottom: 127px;
 }
 
 .more_bt {
     width: 200px;
-    float: left;
+    float: right;
 }
 
 .more_bt a {
